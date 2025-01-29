@@ -19,7 +19,7 @@ void error_callback(int error, const char* description);
 GLFWwindow* initialize_window();
 unsigned int programInit();
 void initializeRenderer(unsigned int* VAO, unsigned int* vertex_buffer, unsigned int* dist_buffer, GLFWwindow* window);
-void bufferData(unsigned int* vertices, float* distances, unsigned int vertex_buffer, unsigned int dist_buffer);
+void bufferData(float* vertices, float* distances, unsigned int vertex_buffer, unsigned int dist_buffer);
 // void save(float* colorData, int iter);
 void render(unsigned int VAO, GLFWwindow* window, unsigned int shaderProgram);
 #endif

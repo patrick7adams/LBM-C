@@ -108,12 +108,12 @@ void initializeRenderer(unsigned int* VAO, unsigned int* vertex_buffer, unsigned
 	glBindVertexArray(*VAO);
 }
 
-void bufferData(unsigned int* vertices, float* distances, unsigned int vertex_buffer, unsigned int dist_buffer) {
+void bufferData(float* vertices, float* distances, unsigned int vertex_buffer, unsigned int dist_buffer) {
 	// printf("Buffering new data...\n");
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, totalPoints * 2 * sizeof(unsigned int), vertices, GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(0, 2, GL_UNSIGNED_INT, GL_FALSE, 2*sizeof(unsigned int), (void*)0);
+	glBufferData(GL_ARRAY_BUFFER, totalPoints * 2 * sizeof(float), vertices, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	//delete[] vertices;
 
