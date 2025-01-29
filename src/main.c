@@ -6,15 +6,15 @@ int main() {
     int iter = 0;
     GLFWwindow* window = initialize_window();
 
-    unsigned int* vertices = (unsigned int*) malloc(totalPoints * 2 * sizeof(unsigned int));
-    float* distances = (float*) malloc(totalPoints * sizeof(float));
+    float* vertices = (float*) malloc(totalPoints * 2 * scale_sq *sizeof(float));
+    float* distances = (float*) malloc(totalPoints * scale_sq * sizeof(float));
     initialize_test_points(vertices, distances);
-    int i = 501;
-    printf("(%d, %d)\n", vertices[i*2], vertices[i*2+1]);
-    printf("%f\n", distances[i]);
     unsigned int shaderProgram = programInit();
     unsigned int vertex_buffer, distance_buffer, VAO;
     initializeRenderer(&VAO, &vertex_buffer, &distance_buffer, window);
+    int i=19800;
+    printf("(%f)\n", distances[i]);
+    printf("(%f, %f)\n", vertices[2*i], vertices[2*i+1]);
     if (vertices == NULL || distances == NULL) {
         printf("Vertices or distances did not initialize properly!");
         exit(EXIT_FAILURE);
