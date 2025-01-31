@@ -25,7 +25,7 @@ GLFWwindow* initialize_window() {
 	// glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_NATIVE_CONTEXT_API);
 	// glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 
-	GLFWwindow* window = glfwCreateWindow(resX, resY, "Mandelbrot Set", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(resX, resY, "LBM Awesome", NULL, NULL);
 	if (!window) {
 		std::cout << "Window failed to create" << std::endl;
 		glfwTerminate();
