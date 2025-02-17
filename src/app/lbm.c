@@ -31,7 +31,7 @@ void initialize_walls(int* walls) {
             // } else {
             //     walls[i*resX+k] = 0;
             // } 
-            if (sqrt((i-resY/2) * (i-resY/2) + (k-resX/2) * (k-resX/2)) < 20) {
+            if (sqrt((i-resY/2) * (i-resY/2) + (k-resX/2) * (k-resX/2)) < 40) {
                 walls[i*resX+k] = 1;
             } else {
                 walls[i*resX+k] = 0;
@@ -51,33 +51,33 @@ void initialize(int* walls, float* directional_densities) {
 }
 
 void step_lbm(
-    float* directional_densities, float* directional_densities_bndry, \
-float* directional_densities_old, float* densities, float* ux, float* uy, int* walls)  {
+    float* directional_densities, float* directional_densities_tmp, \
+ float* densities, float* ux, float* uy, int* walls)  {
     struct timeval stream, collide, end;
     gettimeofday(&stream, NULL);
-    streaming_step(directional_densities_old, directional_densities);
+    streaming_step(directional_densities_tmp, directional_densities);
     gettimeofday(&collide, NULL);
-    srt_bgk_collision_step(directional_densities, directional_densities_bndry, densities, ux, uy, walls);
+    srt_bgk_collision_step(directional_densities, directional_densities_tmp, densities, ux, uy, walls);
     gettimeofday(&end, NULL);
     // print_time(&stream, &collide, "Stream time: ");
     // print_time(&collide, &end, "Collide time: ");
 }
 
-void streaming_step(float* old_directional_densities, float* directional_densities) {
+void streaming_step(float* directional_densities_tmp, float* directional_densities) {
     // ~0.0135 seconds to run
     for (int j = 0; j < resY; j++) {
         for (int k = 0; k < resX; k++) {
             for (int i = 0; i < 9; i++) {
                 int jx = (j+dx[i]+resY)%resY;
                 int kx = (k+dy[i]+resX)%resX;
-                old_directional_densities[jx*resX*9 + kx*9+i] = directional_densities[j*resX*9 + k*9 + i];
+                directional_densities_tmp[jx*resX*9 + kx*9+i] = directional_densities[j*resX*9 + k*9 + i];
             }
         }
     }
-    memcpy(directional_densities, old_directional_densities, totalPoints*9*sizeof(float));
+    memcpy(directional_densities, directional_densities_tmp, totalPoints*9*sizeof(float));
 }
 
-void srt_bgk_collision_step(float* directional_densities, float* directional_densities_bndry, float* densities, float* ux, float* uy, int* walls) {
+void srt_bgk_collision_step(float* directional_densities, float* directional_densities_tmp, float* densities, float* ux, float* uy, int* walls) {
     // ~0.019 seconds
     for (int j = 0; j < resY; j++) {
         for (int k = 0; k < resX; k++) {
@@ -96,29 +96,29 @@ void srt_bgk_collision_step(float* directional_densities, float* directional_den
     }
     // save all directional densities into tmp array
     // ~0.0009 seconds
-    memcpy(directional_densities_bndry, directional_densities, resX*resY*9*sizeof(float));
+    memcpy(directional_densities_tmp, directional_densities, resX*resY*9*sizeof(float));
     for (int j = 0; j < resY; j++) {
         for (int k = 0; k < resX; k++) {
             int index = j*resX+k;
             float tmp;
             if (walls[index]) {
                 // flip around all density directions
-                tmp = directional_densities_bndry[9*index + 1];
-                directional_densities_bndry[9*index+1] = directional_densities_bndry[9*index+3];
-                directional_densities_bndry[9*index+3] = tmp;
-                tmp = directional_densities_bndry[9*index + 2];
-                directional_densities_bndry[9*index+2] = directional_densities_bndry[9*index+4];
-                directional_densities_bndry[9*index+4] = tmp;
-                tmp = directional_densities_bndry[9*index + 5];
-                directional_densities_bndry[9*index+5] = directional_densities_bndry[9*index+7];
-                directional_densities_bndry[9*index+7] = tmp;
-                tmp = directional_densities_bndry[9*index + 6];
-                directional_densities_bndry[9*index+6] = directional_densities_bndry[9*index+8];
-                directional_densities_bndry[9*index+8] = tmp;
+                tmp = directional_densities_tmp[9*index + 1];
+                directional_densities_tmp[9*index+1] = directional_densities_tmp[9*index+3];
+                directional_densities_tmp[9*index+3] = tmp;
+                tmp = directional_densities_tmp[9*index + 2];
+                directional_densities_tmp[9*index+2] = directional_densities_tmp[9*index+4];
+                directional_densities_tmp[9*index+4] = tmp;
+                tmp = directional_densities_tmp[9*index + 5];
+                directional_densities_tmp[9*index+5] = directional_densities_tmp[9*index+7];
+                directional_densities_tmp[9*index+7] = tmp;
+                tmp = directional_densities_tmp[9*index + 6];
+                directional_densities_tmp[9*index+6] = directional_densities_tmp[9*index+8];
+                directional_densities_tmp[9*index+8] = tmp;
                 ux[index] = 0;
                 uy[index] = 0;
                 for (int i = 0; i < 9; i++) {
-                    directional_densities[9*index+i] = directional_densities_bndry[9*index+i];
+                    directional_densities[9*index+i] = directional_densities_tmp[9*index+i];
                 }
                 
             }

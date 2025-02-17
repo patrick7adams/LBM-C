@@ -22,9 +22,9 @@ void initialize_test_points(float* vertices, float* distances);
 void print_point(float* directional_densities, int x, int y, int iter);
 void initialize_walls(int* walls);
 void initialize(int* walls, float* directional_densities);
-void step_lbm(float* directional_densities, float* directional_densities_bndry, float* directional_densities_old, float* densities, float* ux, float* uy, int* walls);
-void streaming_step(float* old_directional_densities, float* directional_densities);
-void srt_bgk_collision_step(float* directional_densities, float* directional_densities_bndry, float* densities, float* ux, float* uy, int* walls);
+void step_lbm(float* directional_densities, float* directional_densities_tmp, float* densities, float* ux, float* uy, int* walls);
+void streaming_step(float* directional_densities_tmp, float* directional_densities);
+void srt_bgk_collision_step(float* directional_densities, float* directional_densities_tmp, float* densities, float* ux, float* uy, int* walls);
 void plot_lbm(float* distances, float* ux, float* uy);
 
 #endif

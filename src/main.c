@@ -19,8 +19,7 @@ int main() {
     printf("(%f, %f)\n", vertices[2*i], vertices[2*i+1]);
 
     float* directional_densities = (float*) malloc(totalPoints * 9 * sizeof(float));
-    float* directional_densities_bndry = (float*) malloc(totalPoints * 9 * sizeof(float));
-    float* directional_densities_old = (float*) malloc(totalPoints * 9 * sizeof(float));
+    float* directional_densities_tmp = (float*) malloc(totalPoints * 9 * sizeof(float));
     srand(time(NULL));
     for (int i = 0; i < totalPoints*9; i++) {
         directional_densities[i] = 1.0f + 0.4f * ((float) rand() / RAND_MAX);
@@ -41,7 +40,7 @@ int main() {
         // printf("\x1B[32mStarting Simulation!\033[0m\n");
         // main function goes here
         // print_point(directional_densities, 1, 1, iter);
-        step_lbm(directional_densities, directional_densities_bndry, directional_densities_old, \ 
+        step_lbm(directional_densities, directional_densities_tmp, \ 
         densities, ux, uy, walls);
         // print_point(directional_densities, 1, 1, iter);
         // printf("%d - density: %f\n", iter, densities[1*resY+1]);
